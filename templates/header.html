@@ -1,0 +1,45 @@
+<%
+If (strIconChoice <> "") Then
+	strIcon1 = "images/icons/" & strIconChoice & ".jpg"
+	strIcon2 = "images/icons/" & strIconChoice & ".jpg"
+End If
+%>
+<%	
+If (strIconChoice2 <> "") Then
+	strIcon2 = "images/icons/" & strIconChoice2 & ".jpg"
+End If
+%>
+<div align="center"><center>
+<table WIDTH="527" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+  <tr>
+<%
+If (strIconChoice <> "") Then
+	Response.Write("<td><img src=""" & strIcon1 & """ WIDTH=""125"" HEIGHT=""200""></td>")
+Else
+	Response.Write("<td WIDTH=""125"" HEIGHT=""200"">")
+End If
+%>
+    <td>
+      <p align="center"><font size="6" face="Franklin Gothic Heavy"><strong>Tim 
+      Murley</strong></font><br>
+      <b><font size="5" face="Franklin Gothic Heavy">Recent
+      Works</font></b></font></p>
+    <table WIDTH="275" BORDER="0" CELLSPACING="0" CELLPADDING="0" HEIGHT="37">
+      <tr>
+        <td WIDTH="25%"><p align="center"><font face="Arial, Helvetica, sans-serif"><a href="galleries.aspx">Gallery</a></font></p></td>
+        <td WIDTH="25%"><p align="center"><a href="mission.aspx"><font face="Arial, Helvetica, sans-serif">Mission</font></a></p></td>
+        <td WIDTH="25%"><p align="center"><a href="resume.aspx"><font face="Arial, Helvetica, sans-serif">Resumé</font></a></p></td>
+        <td WIDTH="25%"><p align="center"><a href="mailto:timmurleyart@yahoo.com"><font face="Arial, Helvetica, sans-serif">E-mail</font></a></p></td>
+      </tr>
+    </table>
+    </td>
+<%
+If (strIconChoice <> "") Then
+	Response.Write("<td><img src=""" & strIcon2 & """ WIDTH=""125"" HEIGHT=""200""></td>")
+Else
+	Response.Write("<td WIDTH=""125"" HEIGHT=""200"">")
+End If
+%>
+  </tr>
+</table>
+</center></div>
