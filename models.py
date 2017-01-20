@@ -25,3 +25,10 @@ class Painting(ndb.Model):
 		
 	def thumbnail_image(self) :
 		return self._base_image() + '=s165'
+		
+class Gallery(ndb.Model):
+    gallery_id = ndb.StringProperty(indexed = False)
+    name = ndb.StringProperty(indexed = False)
+    front_painting = ndb.StructuredProperty(Painting)
+    painting_list = ndb.StructuredProperty(Painting, repeated=True)
+    

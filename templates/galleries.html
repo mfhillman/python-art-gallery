@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>The Art of Jim Curley</title>
+        <link rel="stylesheet" type="text/css" href="css/gallery.css"/>
+    </head>
+<body>
+
+    <div align="center">
+        <center>
+        <table WIDTH="527" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+          <tr>
+            <td WIDTH="125" HEIGHT="200" />
+            <td>
+              <p align="center"><font size="6" face="Franklin Gothic Heavy"><strong>Tim Murley</strong></font><br>
+              <b><font size="5" face="Franklin Gothic Heavy">Recent Works</font></b></font></p>
+            <table WIDTH="275" BORDER="0" CELLSPACING="0" CELLPADDING="0" HEIGHT="37">
+              <tr>
+                <td WIDTH="25%"><p align="center"><font face="Arial, Helvetica, sans-serif"><a href="galleries.aspx">Gallery</a></font></p></td>
+                <td WIDTH="25%"><p align="center"><a href="mission.aspx"><font face="Arial, Helvetica, sans-serif">Mission</font></a></p></td>
+                <td WIDTH="25%"><p align="center"><a href="resume.aspx"><font face="Arial, Helvetica, sans-serif">Resumé</font></a></p></td>
+                <td WIDTH="25%"><p align="center"><a href="mailto:timmurleyart@yahoo.com"><font face="Arial, Helvetica, sans-serif">E-mail</font></a></p></td>
+              </tr>
+            </table>
+            </td>
+            <td WIDTH="125" HEIGHT="200" />
+          </tr>
+        </table>
+        </center>
+    </div>	
+
+	<DIV ALIGN="center"><CENTER>
+			<TABLE WIDTH="527" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+				<TR>
+					<TD COLSPAN="2"><p ALIGN="center"><FONT SIZE="+2" FACE="Arial, Helvetica, sans-serif"> Picture 
+								Galleries</FONT><BR>
+							<FONT SIZE="+1" FACE="Arial, Helvetica, sans-serif">To visit a gallery, click on 
+								the gallery title or the sample painting. </FONT>
+						</p>
+						<P>&nbsp;</P>
+						<DIV ALIGN="center"><CENTER>
+								<TABLE WIDTH="527" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+									<TR>
+										<TD>
+											<FONT SIZE="+1" FACE="Arial, Helvetica, sans-serif">
+                                                {% for gallery in galleries %}
+                                                    <P ALIGN="center">
+                                                        <A HREF="foo.html">
+                                                            <B>{{gallery.name}}</B>
+                                                        </A>
+                                                    </P>
+                                                    <P ALIGN="center">
+                                                        <A HREF="foo.html">
+                                                            <IMG SRC="{{gallery.front_painting.thumbnail_image()}}" BORDER="0"/>
+                                                        </A>
+                                                        <BR>
+                                                    </P>
+                                                    <P>&nbsp;</P>
+                                                {% endfor %}
+											</FONT>
+										</TD>
+									</TR>
+								</TABLE>
+							</CENTER>
+						</DIV>
+						<P ALIGN="CENTER"><FONT SIZE="2" FACE="Arial, Helvetica, sans-serif"> More galleries 
+								are available in the <A HREF="archives.aspx">archives </A>.</FONT></P>
+						<P ALIGN="CENTER"><FONT SIZE="2" FACE="Arial, Helvetica, sans-serif"> ALL IMAGES 
+								COPYRIGHT {{year}} BY TIM MURLEY</FONT></P>
+						<P ALIGN="CENTER"><FONT SIZE="2" FACE="Arial, Helvetica, sans-serif"> Please note that 
+								the color intensity and value viewed on this web page may not translate fully 
+								from the original artwork. </FONT>
+						</P>
+						<BR>
+					</TD>
+				</TR>
+			</TABLE>
+		</CENTER>
+	</DIV>
+	
+    <div align="center">
+        <center>
+        <table WIDTH="527" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+          <tr>
+            <td COLSPAN="2">
+            <p align="center"><font face="Arial, Helvetica, sans-serif">TIM MURLEY</font><font face="Arial, Helvetica, sans-serif"><br>
+            <b>RECENT WORKS</b></font>
+            </p>
+            <div align="center"><center><table WIDTH="450" BORDER="0" CELLSPACING="2" CELLPADDING="0">
+              <tr>
+                <td WIDTH="25%"><p align="center"><font face="Arial, Helvetica, sans-serif"><a href="galleries.aspx">Gallery</a></font></p></td>
+                <td WIDTH="25%"><p align="center"><a href="mission.aspx"><font face="Arial, Helvetica, sans-serif">Mission</font></a></p></td>
+                <td WIDTH="25%"><p align="center"><a href="resume.aspx"><font face="Arial, Helvetica, sans-serif">Resumé</font></a></p></td>
+                <td WIDTH="25%"><p align="center"><a href="mailto:timmurleyart@yahoo.com"><font face="Arial, Helvetica, sans-serif">E-mail</font></a></p></td>
+              </tr>
+            </table>
+            </center></div></td>
+          </tr>
+        </table>
+        </center>
+    </div>
+
+</body>
+</html>

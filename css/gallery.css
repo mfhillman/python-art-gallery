@@ -1,5 +1,9 @@
 @CHARSET "UTF-8";
 body {
     background-color: #000000;
-    color: #c0c0c0
+    color: #c0c0c0;
+}
+
+a:link {
+    color: #c0c0c0;
 }
