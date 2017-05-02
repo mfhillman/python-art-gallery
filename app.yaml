@@ -7,7 +7,7 @@
 # using cloud.google.com/console use the "project id" for your application
 # id.
 application: mfh-art-gallery
-version: 2
+version: 1
 runtime: python27
 api_version: 1
 threadsafe: true
@@ -16,11 +16,21 @@ threadsafe: true
 handlers:
 - url: /css
   static_dir: css
+  
 - url: /js
   static_dir: js
+  
 - url: /images
   static_dir: images
-# This handler tells app engine how to route requests to a WSGI application.
+
+- url: /admin/.*
+  script: admin.app
+  login: admin
+  
+- url: /admin
+  script: admin.app
+  login: admin
+  
 - url: /.*   # This regex directs all routes to main.app
   script: main.app
 

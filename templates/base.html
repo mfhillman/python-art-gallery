@@ -1,74 +1,81 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<link rel="stylesheet" type="text/css" href="css/gallery.css">
-		<meta name="description" content="The Art of Jim Curley">
-		<meta name="distribution" content="global">
-		<meta name="keywords" content="art, fine art, children's art, gallery, massachusetts, boston, painting, university, graphic, design, movies, color, artist, museum, haring, basquiat, warhol, monet, music, murley, moby, carle">
-		<title>The Art of Jim Curley</title>
-	</head>
-	<body>
-        
-		<p ALIGN="center">
-			<A HREF="galleries.html"><IMG src="{{ painting.full_size_image() }}" BORDER="0"></A>
-		</p>
-		<P ALIGN="CENTER"><FONT SIZE="1" FACE="Arial, Helvetica, sans-serif">
-    		ALL IMAGES COPYRIGHT 1998-{{ year }} BY JIM CURLEY</FONT></P>
-	</body>
+  <head>
+    {% if title_extension %}
+      <title>The Art of Jim Curley - {{title_extension}}</title>
+    {% else %}
+      <title>The Art of Jim Curley</title>
+    {% endif %}
+    <link rel="stylesheet" type="text/css" href="/css/gallery.css"/>
+    {% block headerstuff  %}{% endblock %}
+  </head>
+  
+  <body>
+    {% if header %} 
+      <div align="center">
+        <center>
+          <table WIDTH="527" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+            <tr>
+              {% if lefticon %}
+                <td><img src="/images/{{lefticon}}.jpg" WIDTH="125" HEIGHT="200"></td>
+              {% else %}
+                <td WIDTH="125" HEIGHT="200" />
+              {% endif %}
+              <td>
+                <p align="center"><font size="6" face="Franklin Gothic Heavy"><strong>
+                  Jim Curley
+                </strong></font><br>
+                <b><font size="5" face="Franklin Gothic Heavy">
+                  Recent Works
+                </font></b></font></p>
+              <table WIDTH="275" BORDER="0" CELLSPACING="0" CELLPADDING="0" HEIGHT="37">
+                <tr>
+                  <td WIDTH="25%"><p align="center"><a href="/galleries"><font face="Arial, Helvetica, sans-serif">Gallery</font></a></p></td>
+                  <td WIDTH="25%"><p align="center"><a href="/mission"><font face="Arial, Helvetica, sans-serif">Mission</font></a></p></td>
+                  <td WIDTH="25%"><p align="center"><a href="/resume"><font face="Arial, Helvetica, sans-serif">Resumé</font></a></p></td>
+                  <td WIDTH="25%"><p align="center"><a href="mailto:timmurleyart@yahoo.com"><font face="Arial, Helvetica, sans-serif">E-mail</font></a></p></td>
+                </tr>
+              </table>
+              </td>
+              {% if righticon %}
+                <td><img src="/images/{{righticon}}.jpg" WIDTH="125" HEIGHT="200"></td>
+              {% else %}
+                <td WIDTH="125" HEIGHT="200" />
+              {% endif %}
+            </tr>
+          </table>
+        </center>
+      </div>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+	
+	  {% if footer %}
+      <div align="center">
+        <center>
+          <table WIDTH="527" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+            <tr>
+              <td COLSPAN="2">
+              <p align="center">
+                <font face="Arial, Helvetica, sans-serif">
+                  JIM CURLEY</font>
+                <font face="Arial, Helvetica, sans-serif"><br><b>
+                  RECENT WORKS</b></font>
+              </p>
+              <div align="center"><center><table WIDTH="450" BORDER="0" CELLSPACING="2" CELLPADDING="0">
+                <tr>
+                  <td WIDTH="25%"><p align="center"><a href="/galleries"><font face="Arial, Helvetica, sans-serif">Gallery</font></a></p></td>
+                  <td WIDTH="25%"><p align="center"><a href="/mission"><font face="Arial, Helvetica, sans-serif">Mission</font></a></p></td>
+                  <td WIDTH="25%"><p align="center"><a href="/resume"><font face="Arial, Helvetica, sans-serif">Resumé</font></a></p></td>
+                  <td WIDTH="25%"><p align="center"><a href="mailto:timmurleyart@yahoo.com"><font face="Arial, Helvetica, sans-serif">E-mail</font></a></p></td>
+                </tr>
+              </table>
+              </center></div></td>
+            </tr>
+          </table>
+        </center>
+      </div>
+    {% endif %}
+    
+  </body>
 </html>
-
-
-
-
-<%
-If (strIconChoice <> "") Then
-	strIcon1 = "images/icons/" & strIconChoice & ".jpg"
-	strIcon2 = "images/icons/" & strIconChoice & ".jpg"
-End If
-%>
-<%	
-If (strIconChoice2 <> "") Then
-	strIcon2 = "images/icons/" & strIconChoice2 & ".jpg"
-End If
-%>
-<div align="center"><center>
-<table WIDTH="527" BORDER="0" CELLSPACING="0" CELLPADDING="0">
-  <tr>
-<%
-If (strIconChoice <> "") Then
-	Response.Write("<td><img src=""" & strIcon1 & """ WIDTH=""125"" HEIGHT=""200""></td>")
-Else
-	Response.Write("<td WIDTH=""125"" HEIGHT=""200"">")
-End If
-%>
-    <td>
-      <p align="center"><font size="6" face="Franklin Gothic Heavy"><strong>Tim 
-      Murley</strong></font><br>
-      <b><font size="5" face="Franklin Gothic Heavy">Recent
-      Works</font></b></font></p>
-    <table WIDTH="275" BORDER="0" CELLSPACING="0" CELLPADDING="0" HEIGHT="37">
-      <tr>
-        <td WIDTH="25%"><p align="center"><font face="Arial, Helvetica, sans-serif"><a href="galleries.aspx">Gallery</a></font></p></td>
-        <td WIDTH="25%"><p align="center"><a href="mission.aspx"><font face="Arial, Helvetica, sans-serif">Mission</font></a></p></td>
-        <td WIDTH="25%"><p align="center"><a href="resume.aspx"><font face="Arial, Helvetica, sans-serif">Resumé</font></a></p></td>
-        <td WIDTH="25%"><p align="center"><a href="mailto:timmurleyart@yahoo.com"><font face="Arial, Helvetica, sans-serif">E-mail</font></a></p></td>
-      </tr>
-    </table>
-    </td>
-<%
-If (strIconChoice <> "") Then
-	Response.Write("<td><img src=""" & strIcon2 & """ WIDTH=""125"" HEIGHT=""200""></td>")
-Else
-	Response.Write("<td WIDTH=""125"" HEIGHT=""200"">")
-End If
-%>
-  </tr>
-</table>
-
-</center></div>		
-		
-
-
-
-
-<div id="content">{% block content %}{% endblock %}</div>
