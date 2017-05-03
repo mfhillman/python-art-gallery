@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% set header = True %}
+{% set footer = True %}
+{% set lefticon = 'propagandastarsicon' %}
+{% set righticon = 'newstars' %}
+{% set title_extension = 'Resumé' %}
+
+{% block content %}
+  <div align="center"><center>
+    <table WIDTH="527" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+      <tr>
+        <td COLSPAN="2"><p align="center"><font face="Arial, Helvetica, sans-serif" size="+2">TIM MURLEY</font><br></p>
+          <p align="center"><font size="+1" face="Arial, Helvetica, sans-serif">
+            Commissions available. Please inquire.<br><br>
+            Web: <a href="http://www.timmurley.com">www.timmurley.com</a><br>
+            Email: <a href="mailto:timmurleyart@yahoo.com">timmurleyart@yahoo.com</a><br>
+            Facebook Artist Page: <a href="http://www.facebook.com/pages/Tim-murley/464611656904146">Tim Murley</a><br>
+          </font></p>
+        </td>
+      </tr>
+    </table>
+  </center></div>
+  <div align="center"><center>
+    <table WIDTH="500" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+      <TBODY>
+        <tr>
+          <td WIDTH="100%" HEIGHT="17"><font size="+2" face="Arial, Helvetica, sans-serif">
+            <br><b>EXHIBITIONS:</b>
+          </font></td>
+        </tr>
+        <tr>
+          <td WIDTH="100%">
+            <blockquote>
+              <div>
+                <div class="RTE">
+                  {% for exhibition in exhibitions %}
+                    {{exhibition}}<br /><br />
+                  {% endfor %}
+
+                </div>
+              </div>
+            </blockquote>
+          </td>
+        </tr>
+        <tr>
+          <td WIDTH="100%" HEIGHT="17"><font size="+2" face="Arial, Helvetica, sans-serif">
+            <br><b>HONORS:</b>
+          </font></td>
+        </tr>
+        <tr>
+          <td WIDTH="100%" HEIGHT="17">
+            <blockquote>
+              {% for honor in honors %}
+                <p>{{honor}}</p>
+              {% endfor %}
+
+            </blockquote>
+          </td>
+        </tr>
+        <tr>
+          <td WIDTH="100%" HEIGHT="17"><font size="+2" face="Arial, Helvetica, sans-serif">
+            <br><b>EDUCATION:</b>
+          </font></td>
+        </tr>
+        <tr>
+          <td WIDTH="100%">
+            <blockquote>
+              {% for school in schools %}
+                {<p>{{school}}</p>
+              {% endfor %}
+            </blockquote>
+          </td>
+        </tr>
+      </TBODY>
+    </table>
+  </center></div>
+{% endblock %}

@@ -95,6 +95,23 @@ class MissionHandler(webapp2.RequestHandler):
 
     template = JINJA_ENVIRONMENT.get_template('mission.html')
     self.response.write(template.render(template_values))
+
+class ResumeHandler(webapp2.RequestHandler):
+  def get(self):
+
+    year = datetime.datetime.now().year
+    exhibitions = ['School of the Museum of Fine Arts, Boston, MA, November 2016', 'Liberty Hotel, Solo Exhibition, Boston, MA, October 2016']
+    honors = ['The Medici Group, School of the Museum of Fine Arts','Internal Jury Award, University of Massachusetts']
+
+    template_values = {
+        'year': year,
+        'exhibitions': exhibitions,
+        'honors': honors,
+        'schools': []
+    }		
+
+    template = JINJA_ENVIRONMENT.get_template('resume.html')
+    self.response.write(template.render(template_values))
     
 app = webapp2.WSGIApplication([
     ('/', HomeHandler),
@@ -102,5 +119,6 @@ app = webapp2.WSGIApplication([
     ('/(galleries|archives)/([^/]+)', GalleryHandler),
     ('/(galleries|archives)/([^/]+)/([^/]+)', PaintingHandler),
     ('/mission', MissionHandler),
+    ('/resume', ResumeHandler),
     ], debug=True)
   
