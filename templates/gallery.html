@@ -19,14 +19,14 @@
             <TABLE WIDTH="527" BORDER="0" CELLSPACING="0" CELLPADDING="0">
               <TR><TD>
                 <FONT SIZE="+1" FACE="Arial, Helvetica, sans-serif">
-                  {% for painting in gallery.paintings %}
+                  {% for painting in paintings %}
                     <P ALIGN="center">
-                      <A HREF="/{{pool_name}}/{{gallery.id}}/{{painting.file_name}}">
+                      <A HREF="/{{pool_name}}/{{gallery.url_fragment()}}/{{painting.url_fragment()}}">
                         <B>{{painting.title}}</B>
                       </A>
                     </P>
                     <P ALIGN="center">
-                      <A HREF="/{{pool_name}}/{{gallery.id}}/{{painting.file_name}}">
+                      <A HREF="/{{pool_name}}/{{gallery.url_fragment()}}/{{painting.url_fragment()}}">
                         <IMG SRC="{{painting.thumbnail_image()}}"">
                       </A>
                     </P>

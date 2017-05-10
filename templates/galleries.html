@@ -19,12 +19,12 @@
                 <FONT SIZE="+1" FACE="Arial, Helvetica, sans-serif">
                   {% for gallery in galleries %}
                     <P ALIGN="center">
-                      <A HREF="/{{pool_name}}/{{gallery.id}}">
+                      <A HREF="/{{pool_name}}/{{gallery.url_fragment()}}">
                         <B>{{gallery.name}}</B>
                       </A>
                     </P>
                     <P ALIGN="center">
-                      <A HREF="/{{pool_name}}/{{gallery.id}}">
+                      <A HREF="/{{pool_name}}/{{gallery.url_fragment()}}">
                         <IMG SRC="{{gallery.front_painting.thumbnail_image()}}" BORDER="0"/>
                       </A>
                       <BR>

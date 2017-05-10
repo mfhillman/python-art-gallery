@@ -1,3 +1,5 @@
+import string
+
 from google.appengine.api import images
 from google.appengine.ext import blobstore
 from google.appengine.ext import ndb
@@ -5,14 +7,17 @@ from google.appengine.ext import ndb
 _PAINTING_BUCKET = 'mfh-art-gallery.appspot.com'
 _PAINTING_FORMAT = '/gs/' + _PAINTING_BUCKET + '/artwork-images/{0}.jpg'
 
+_RESUME_KEY_LOCATION = 'resume'
+
 class Painting(ndb.Model):
-  file_name = ndb.StringProperty(indexed = False)
-  title = ndb.StringProperty(indexed = False)
-  width = ndb.IntegerProperty()
-  height = ndb.IntegerProperty()
-	
+  # file name is stored in id
+  title = ndb.StringProperty(indexed=False)
+  width = ndb.IntegerProperty(indexed=False)
+  height = ndb.IntegerProperty(indexed=False)
+  old_id = ndb.IntegerProperty(indexed=True)
+
   def _image_path(self) :
-    return _PAINTING_FORMAT.format(self.file_name)
+    return _PAINTING_FORMAT.format(self.key.id())
 
   def _blob_key(self) :
     return blobstore.create_gs_key(self._image_path());
@@ -25,10 +30,54 @@ class Painting(ndb.Model):
 	
   def thumbnail_image(self) :
     return self._base_image() + '=s165'
+    
+  def url_fragment(self) :
+    return self.key.id()
 		
 class Gallery(ndb.Model):
-  id = ndb.StringProperty(indexed = True)
-  name = ndb.StringProperty(indexed = False)
+  name = ndb.StringProperty(indexed=False)
   front_painting = ndb.StructuredProperty(Painting)
-  paintings = ndb.StructuredProperty(Painting, repeated=True)
+  painting_keys = ndb.KeyProperty(repeated=True)
+  
+  def url_fragment(self) :
+    return self.key.id()
     
+class GalleryList(ndb.Model):
+  gallery_keys = ndb.KeyProperty(repeated=True)
+  
+class SchoolInfo(ndb.Model):
+  school = ndb.StringProperty(indexed=False)
+  school_detail = ndb.StringProperty(indexed=False)
+  
+  def to_admin_str(self):
+    if self.school_detail:
+      return self.school + '|' + self.school_detail
+    else:
+      return self.school
+      
+  def from_admin_str(self, str):
+    strs = string.split(str, '|')
+    self.school = strs[0]
+    if len(strs) > 1:
+      self.school_detail = strs[1]
+    else:
+      self.school_detail = ''
+
+class ResumeInfo(ndb.Model):
+  exhibitions = ndb.StringProperty(repeated=True)
+  honors = ndb.StringProperty(repeated=True)
+  schools = ndb.StructuredProperty(SchoolInfo, repeated=True)
+  
+  @classmethod
+  def retrieve(cls) :
+    return cls.get_or_insert(_RESUME_KEY_LOCATION)
+    
+  def save(self) :
+    history_entry = ResumeHistory(resume=self)
+    history_entry.resume = self
+    self.put()
+    history_entry.put()
+  
+class ResumeHistory(ndb.Model):
+  resume = ndb.StructuredProperty(ResumeInfo)
+  date = ndb.DateTimeProperty(auto_now_add=True)

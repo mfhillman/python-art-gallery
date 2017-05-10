@@ -66,7 +66,10 @@
           <td WIDTH="100%">
             <blockquote>
               {% for school in schools %}
-                {<p>{{school}}</p>
+                <p><b>{{school.school}}</b></p>
+                {%if school.school_detail %}
+                  <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{school.school_detail}}</p>
+                {% endif %}
               {% endfor %}
             </blockquote>
           </td>

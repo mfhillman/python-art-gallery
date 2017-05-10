@@ -4,7 +4,7 @@ import os
 import jinja2
 import webapp2
 
-from models import Painting, Gallery
+from models import Painting, Gallery, SchoolInfo, ResumeInfo
 
 JINJA_ENVIRONMENT = jinja2.Environment(
   loader=jinja2.FileSystemLoader(os.path.join(os.path.dirname(__file__), 'templates')),
@@ -16,7 +16,7 @@ class HomeHandler(webapp2.RequestHandler):
   def get(self):
   
     year = datetime.datetime.now().year
-    header_painting = Painting(file_name=HOME_PAINTING)
+    header_painting = Painting(id=HOME_PAINTING)
 
     template_values = {
         'year': year,
@@ -31,8 +31,8 @@ class GalleriesHandler(webapp2.RequestHandler):
    
     year = datetime.datetime.now().year
     galleries = [
-        Gallery(id='foo', name='Gallery One', front_painting = Painting(file_name = 'legendofsleepyhollow')),
-        Gallery(id='foo', name='Gallery Two', front_painting = Painting(file_name = 'legendofsleepyhollow'))
+        Gallery(id='foo', name='Gallery One', front_painting = Painting(id='legendofsleepyhollow')),
+        Gallery(id='foo', name='Gallery Two', front_painting = Painting(id='legendofsleepyhollow'))
     ]
 
     template_values = {
@@ -50,17 +50,18 @@ class GalleryHandler(webapp2.RequestHandler):
 
     year = datetime.datetime.now().year
 
-    painting_one = Painting(file_name='legendofsleepyhollow', title='Legend of Sleepy Hollow')
-    painting_two = Painting(file_name='legendofsleepyhollow', title='Legendary Sleepy Hollow')
+    painting_one = Painting(id='legendofsleepyhollow', title='Legend of Sleepy Hollow')
+    painting_two = Painting(id='legendofsleepyhollow', title='Legendary Sleepy Hollow')
+    paintings = [painting_one, painting_two]
     gallery = Gallery(
         id=gallery_id,
         name='Sleepy Hollows',
-        front_painting=painting_one,
-        paintings=[painting_one,painting_two])
+        front_painting=painting_one)
 
     template_values = {
         'year': year,
         'gallery': gallery,
+        'paintings': paintings,
         'pool_name': pool_name
     }
 
@@ -72,12 +73,12 @@ class PaintingHandler(webapp2.RequestHandler):
 
     year = datetime.datetime.now().year
 
-    painting = Painting(file_name='legendofsleepyhollow', title='Legend of Sleepy Hollow', width=50, height=100)
+    painting = Painting(id='legendofsleepyhollow', title='Legend of Sleepy Hollow', width=50, height=100)
 
     template_values = {
         'year': year,
         'painting': painting,
-        'gallery_id': gallery_id,
+        'gallery_url_fragment': gallery_id,
         'pool_name': pool_name
     }
 
@@ -99,15 +100,14 @@ class MissionHandler(webapp2.RequestHandler):
 class ResumeHandler(webapp2.RequestHandler):
   def get(self):
 
+    resume = ResumeInfo.retrieve()
     year = datetime.datetime.now().year
-    exhibitions = ['School of the Museum of Fine Arts, Boston, MA, November 2016', 'Liberty Hotel, Solo Exhibition, Boston, MA, October 2016']
-    honors = ['The Medici Group, School of the Museum of Fine Arts','Internal Jury Award, University of Massachusetts']
 
     template_values = {
         'year': year,
-        'exhibitions': exhibitions,
-        'honors': honors,
-        'schools': []
+        'exhibitions': resume.exhibitions,
+        'honors': resume.honors,
+        'schools': resume.schools
     }		
 
     template = JINJA_ENVIRONMENT.get_template('resume.html')

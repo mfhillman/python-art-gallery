@@ -22,6 +22,9 @@ handlers:
   
 - url: /images
   static_dir: images
+  
+- url: /bootstrap
+  static_dir: bootstrap
 
 - url: /admin/.*
   script: admin.app
