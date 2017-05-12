@@ -12,9 +12,16 @@ _RESUME_KEY_LOCATION = 'resume'
 class Painting(ndb.Model):
   # file name is stored in id
   title = ndb.StringProperty(indexed=False)
+  base_image_url = ndb.StringProperty(indexed=False)
   width = ndb.IntegerProperty(indexed=False)
   height = ndb.IntegerProperty(indexed=False)
   old_id = ndb.IntegerProperty(indexed=True)
+  
+  def set_base_image_url(self) :
+    try:
+      self.base_image_url = self._base_image()
+    except images.ObjectNotFoundError:
+      self.base_image_url = ''
 
   def _image_path(self) :
     return _PAINTING_FORMAT.format(self.key.id())
@@ -26,17 +33,17 @@ class Painting(ndb.Model):
     return images.get_serving_url(self._blob_key())
 	
   def full_size_image(self) :
-    return self._base_image() + '=s0'
+    return self.base_image_url + '=s0'
 	
   def thumbnail_image(self) :
-    return self._base_image() + '=s165'
+    return self.base_image_url + '=s165'
     
   def url_fragment(self) :
     return self.key.id()
 		
 class Gallery(ndb.Model):
   name = ndb.StringProperty(indexed=False)
-  front_painting = ndb.StructuredProperty(Painting)
+  front_painting_id = ndb.StringProperty(indexed=False)
   painting_keys = ndb.KeyProperty(repeated=True)
   
   def url_fragment(self) :

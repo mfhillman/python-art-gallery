@@ -4,7 +4,9 @@ import os
 import jinja2
 import webapp2
 
-from models import Painting, Gallery, SchoolInfo, ResumeInfo
+from google.appengine.ext import ndb
+
+from models import Painting, Gallery, GalleryList, SchoolInfo, ResumeInfo
 
 JINJA_ENVIRONMENT = jinja2.Environment(
   loader=jinja2.FileSystemLoader(os.path.join(os.path.dirname(__file__), 'templates')),
@@ -16,7 +18,7 @@ class HomeHandler(webapp2.RequestHandler):
   def get(self):
   
     year = datetime.datetime.now().year
-    header_painting = Painting(id=HOME_PAINTING)
+    header_painting = Painting.get_by_id(HOME_PAINTING)
 
     template_values = {
         'year': year,
@@ -30,14 +32,15 @@ class GalleriesHandler(webapp2.RequestHandler):
   def get(self, pool_name):
    
     year = datetime.datetime.now().year
-    galleries = [
-        Gallery(id='foo', name='Gallery One', front_painting = Painting(id='legendofsleepyhollow')),
-        Gallery(id='foo', name='Gallery Two', front_painting = Painting(id='legendofsleepyhollow'))
-    ]
-
+    gallery_keys = GalleryList.get_by_id(pool_name).gallery_keys
+    galleries = ndb.get_multi(gallery_keys)
+    front_painting_keys = map(lambda g: ndb.Key(Painting, g.front_painting_id), galleries)
+    front_paintings = ndb.get_multi(front_painting_keys)
+    pairs = zip(galleries, front_paintings)
+    
     template_values = {
         'year': year,
-        'galleries': galleries,
+        'gallery_front_pairs': pairs,
         'pool_name': pool_name,
         'pool_title': 'Galleries'
     }
@@ -49,14 +52,8 @@ class GalleryHandler(webapp2.RequestHandler):
   def get(self, pool_name, gallery_id):
 
     year = datetime.datetime.now().year
-
-    painting_one = Painting(id='legendofsleepyhollow', title='Legend of Sleepy Hollow')
-    painting_two = Painting(id='legendofsleepyhollow', title='Legendary Sleepy Hollow')
-    paintings = [painting_one, painting_two]
-    gallery = Gallery(
-        id=gallery_id,
-        name='Sleepy Hollows',
-        front_painting=painting_one)
+    gallery = Gallery.get_by_id(gallery_id)
+    paintings = ndb.get_multi(gallery.painting_keys)
 
     template_values = {
         'year': year,
@@ -72,8 +69,7 @@ class PaintingHandler(webapp2.RequestHandler):
   def get(self, pool_name, gallery_id, painting_id):
 
     year = datetime.datetime.now().year
-
-    painting = Painting(id='legendofsleepyhollow', title='Legend of Sleepy Hollow', width=50, height=100)
+    painting = Painting.get_by_id(painting_id)
 
     template_values = {
         'year': year,
