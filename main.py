@@ -52,34 +52,50 @@ class GalleryHandler(webapp2.RequestHandler):
   def get(self, pool_name, gallery_id):
 
     year = datetime.datetime.now().year
-    gallery = Gallery.get_by_id(gallery_id)
-    paintings = ndb.get_multi(gallery.painting_keys)
-
-    template_values = {
-        'year': year,
-        'gallery': gallery,
-        'paintings': paintings,
-        'pool_name': pool_name
-    }
-
-    template = JINJA_ENVIRONMENT.get_template('gallery.html')
-    self.response.write(template.render(template_values))
+    if gallery_id.isdigit():
+      gallery = Gallery.get_by_id(gallery_id)
+    else:
+      gallery = None
+    if gallery:
+      paintings = ndb.get_multi(gallery.painting_keys)
+  
+      template_values = {
+          'year': year,
+          'gallery': gallery,
+          'paintings': paintings,
+          'pool_name': pool_name
+      }
+  
+      template = JINJA_ENVIRONMENT.get_template('gallery.html')
+      self.response.write(template.render(template_values))
+    else:
+      self.error(404)
 
 class PaintingHandler(webapp2.RequestHandler):
   def get(self, pool_name, gallery_id, painting_id):
 
     year = datetime.datetime.now().year
-    painting = Painting.get_by_id(painting_id)
-
-    template_values = {
-        'year': year,
-        'painting': painting,
-        'gallery_url_fragment': gallery_id,
-        'pool_name': pool_name
-    }
-
-    template = JINJA_ENVIRONMENT.get_template('painting.html')
-    self.response.write(template.render(template_values))
+    if len(painting_id) > 0:
+      painting = Painting.get_by_id(painting_id)
+    else:
+      painting = None
+    if gallery_id.isdigit():
+      gallery = Gallery.get_by_id(gallery_id)
+    else:
+      gallery = None
+      
+    if painting and gallery:
+      template_values = {
+          'year': year,
+          'painting': painting,
+          'gallery_url_fragment': gallery_id,
+          'pool_name': pool_name
+      }
+  
+      template = JINJA_ENVIRONMENT.get_template('painting.html')
+      self.response.write(template.render(template_values))
+    else:
+      self.error(404)
 		
 class MissionHandler(webapp2.RequestHandler):
   def get(self):
@@ -109,6 +125,24 @@ class ResumeHandler(webapp2.RequestHandler):
     template = JINJA_ENVIRONMENT.get_template('resume.html')
     self.response.write(template.render(template_values))
     
+class LegacyImageHandler(webapp2.RequestHandler):
+  def get(self):
+    gallery_id = self.request.get('GID')
+    if gallery_id.isdigit():
+      gallery = Gallery.get_by_id(gallery_id)
+    else:
+      gallery = None
+    painting_param = self.request.get('PID')
+    if painting_param.isdigit():
+      old_painting_id = int(self.request.get('PID'))
+      painting = Painting.get_from_old_id(old_painting_id)
+    else:
+      painting = None
+    if painting and gallery:
+      self.redirect('/galleries/' + gallery_id + '/' + painting.key.id())
+    else:
+      self.error(404)
+    
 app = webapp2.WSGIApplication([
     ('/', HomeHandler),
     ('/(galleries|archives)', GalleriesHandler),
@@ -116,5 +150,6 @@ app = webapp2.WSGIApplication([
     ('/(galleries|archives)/([^/]+)/([^/]+)', PaintingHandler),
     ('/mission', MissionHandler),
     ('/resume', ResumeHandler),
+    ('/image.aspx', LegacyImageHandler)
     ], debug=True)
   

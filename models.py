@@ -40,6 +40,15 @@ class Painting(ndb.Model):
     
   def url_fragment(self) :
     return self.key.id()
+    
+  @classmethod
+  def get_from_old_id(cls, old_id):
+    query = cls.query(cls.old_id == old_id)
+    results = query.fetch(1)
+    if len(results) > 0:
+      return results[0]
+    else:
+      return None
 		
 class Gallery(ndb.Model):
   name = ndb.StringProperty(indexed=False)
