@@ -77,7 +77,147 @@ class UpdateSchoolsHandler(webapp2.RequestHandler):
     resume.save()
     
     self.redirect('/admin/confirm')
+
+class EditGalleriesHandler(webapp2.RequestHandler):
+  def get(self):
+   
+    gallery_keys = GalleryList.get_by_id('galleries').gallery_keys
+    galleries = ndb.get_multi(gallery_keys)
+    archive_keys = GalleryList.get_by_id('archives').gallery_keys
+    archives = ndb.get_multi(archive_keys)
     
+    gallery_strs = []
+    for gallery in galleries:
+      gallery_strs.append(','.join([gallery.url_fragment(), gallery.name]))
+    main_galleries_text = '\n'.join(gallery_strs)
+
+    archive_strs = []
+    for gallery in archives:
+      archive_strs.append(','.join([gallery.url_fragment(), gallery.name]))
+    archive_galleries_text = '\n'.join(archive_strs)
+    
+    orphan_strs = []
+    orphans = self.get_orphan_galleries(gallery_keys + archive_keys)
+    for gallery in orphans:
+      orphan_strs.append(','.join([gallery.url_fragment(), gallery.name]))
+    orphan_galleries_text = '\n'.join(orphan_strs)
+    
+    template_values = {
+        'main_galleries_text': main_galleries_text,
+        'archive_galleries_text': archive_galleries_text,
+        'orphans_galleries_text': orphan_galleries_text
+    }
+
+    template = JINJA_ENVIRONMENT.get_template('admin_edit_galleries.html')
+    self.response.write(template.render(template_values))
+    
+  def get_orphan_galleries(self, listed_keys):
+    orphans = []
+    all_galleries = Gallery.query().fetch()
+    
+    for gallery in all_galleries:
+      if gallery.key not in listed_keys:
+        orphans.append(gallery)
+        
+    return orphans
+    
+class UpdateGalleriesHandler(webapp2.RequestHandler):
+  def post(self, pool_name):
+    # Content is one gallery per line: id, name.
+    # When saving gallery lists, name is ignored
+    new_galleries_content = self.request.get('content')
+    new_galleries_list = string.split(new_galleries_content, '\n')
+    
+    gallery_list = GalleryList(id=pool_name)
+    gallery_list.gallery_keys = []
+    for gal in new_galleries_list:
+      gal_id = string.split(gal, ',')[0]
+      gallery_list.gallery_keys.append(ndb.Key(Gallery, gal_id))
+
+    gallery_list.save()
+    
+    self.redirect('/admin/confirm')
+
+class NavToGalleryHandler(webapp2.RequestHandler):
+  def post(self):
+    gallery_id_content = self.request.get('content')
+    self.redirect('/admin/edit_gallery/' + gallery_id_content)
+
+class EditGalleryHandler(webapp2.RequestHandler):
+  def get(self, gallery_id): 
+    if gallery_id.isdigit():
+      gallery = Gallery.get_by_id(gallery_id)
+      paintings = ndb.get_multi(gallery.painting_keys)
+    else:
+      gallery_id = self.get_fresh_id()
+      gallery = Gallery(id=gallery_id)      
+      paintings = []
+      
+    painting_strs = []
+    for painting in paintings:
+      painting_strs.append(','.join([painting.title,str(painting.height),
+                                     str(painting.width),painting.key.id()]))
+    painting_text = '\n'.join(painting_strs)
+
+    template_values = {
+        'gallery': gallery,
+        'paintings_text': painting_text
+    }
+
+    template = JINJA_ENVIRONMENT.get_template('admin_edit_gallery.html')
+    self.response.write(template.render(template_values))
+
+  def get_fresh_id(self):
+    all_galleries = Gallery.query().fetch()
+    sorted_galleries = sorted(all_galleries, key=lambda gal: int(gal.key.id()))
+        
+    return int(sorted_galleries[len(sorted_galleries)-1].key.id()) + 1;
+
+class UpdateGalleryHandler(webapp2.RequestHandler):
+  def post(self):
+    gallery = Gallery(id=self.request.get('gallery_id'),
+        name=self.request.get('gallery_name'),
+        front_painting_id=self.request.get('front_painting_id'))
+        
+    # Note that columns are expected to be title, height, width, id
+    painting_strs = string.split(self.request.get('paintings_text'), '\n')
+ 
+    paintings = []
+    for painting_str in painting_strs:
+      row = string.split(painting_str, ',')
+      painting = Painting(
+          id=string.strip(row[3]),
+          title=string.strip(row[0]), 
+          height=int(row[1]) if row[1] else 0,
+          width=int(row[2]) if row[2] else 0)  
+      paintings.append(painting)
+      gallery.painting_keys.append(painting.key)
+      
+    self.response.write('painting count ' + str(len(paintings)) + '<BR>')
+    
+    # Write back only changed paintings
+    changed_paintings = []
+    old_paintings = ndb.get_multi(gallery.painting_keys)
+    
+    for i in range(0, len(old_paintings)):
+      old = old_paintings[i]
+      new = paintings[i]
+      if old == None or len(old.base_image_url) == 0 or (old.title != new.title or old.height != new.height or old.width != new.width):
+        if old != None and len(old.base_image_url) > 0:
+          new.base_image_url = old.base_image_url
+        else:
+          new.set_base_image_url()
+        changed_paintings.append(new)
+          
+    if len(changed_paintings) > 0:
+      self.response.write(changed_paintings)
+      ndb.put_multi(changed_paintings)
+    else:
+      self.response.write('<BR> no changed paintings!<BR>')
+      
+    self.response.write('<BR>' + str(gallery) + '<BR>')
+    gallery.save()
+
 class PaintingCsvHandler(webapp2.RequestHandler):
   def get(self):
     with open('csvs/paintings.csv') as csvfile:
@@ -219,6 +359,11 @@ app = webapp2.WSGIApplication([
     ('/admin/update_exhibitions', UpdateExhibitionsHandler),
     ('/admin/update_honors', UpdateHonorsHandler),
     ('/admin/update_schools', UpdateSchoolsHandler),
+    ('/admin/edit_galleries', EditGalleriesHandler),
+    ('/admin/update_galleries/(galleries|archives)', UpdateGalleriesHandler),
+    ('/admin/nav_to_gallery', NavToGalleryHandler),
+    ('/admin/edit_gallery/([^/]+)', EditGalleryHandler),
+    ('/admin/update_gallery', UpdateGalleryHandler),
     ('/admin/painting_csv', PaintingCsvHandler),
     ('/admin/gallery_structure', GalleryStructureHandler),
     ('/admin/galleries_and_entries', GalleriesAndEntriesHandler),

@@ -58,8 +58,27 @@ class Gallery(ndb.Model):
   def url_fragment(self) :
     return self.key.id()
     
+  def save(self) :
+    history_entry = GalleryHistory(gallery=self)
+    self.put()
+    history_entry.put()
+    
+class GalleryHistory(ndb.Model):
+  gallery = ndb.StructuredProperty(Gallery)
+  date = ndb.DateTimeProperty(auto_now_add=True)
+    
 class GalleryList(ndb.Model):
   gallery_keys = ndb.KeyProperty(repeated=True)
+  
+  def save(self) :
+    history_entry = GalleryListHistory(gallery_list=self, pool_name=self.key.id())
+    self.put()
+    history_entry.put()
+
+class GalleryListHistory(ndb.Model):
+  pool_name = ndb.StringProperty(indexed = False)
+  gallery_list = ndb.StructuredProperty(GalleryList)
+  date = ndb.DateTimeProperty(auto_now_add=True)
   
 class SchoolInfo(ndb.Model):
   school = ndb.StringProperty(indexed=False)
@@ -90,7 +109,6 @@ class ResumeInfo(ndb.Model):
     
   def save(self) :
     history_entry = ResumeHistory(resume=self)
-    history_entry.resume = self
     self.put()
     history_entry.put()
   

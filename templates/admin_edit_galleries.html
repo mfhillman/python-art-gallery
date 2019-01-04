@@ -39,7 +39,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="brand" href="#">Tim Murley Art Admin Page</a>
+          <a class="brand" href="#">Tim Murley Art Admin Edit Galleries Page</a>
           <div class="nav-collapse collapse pull-right">
             <a href="{{ url|safe }}" class="btn">{{ url_linktext }}</a>
           </div>
@@ -48,45 +48,58 @@
     </div>
     <div class="container">
 
-      <font SIZE="+2"><br><b>Resume Section</b></font>
+      <font SIZE="+2"><br><b>Main Galleries Section</b></font>
       
       <div>
-        <b>Exhibitions</b>
+        <b>Main Gallery Order</b>
 
-        <form action="/admin/update_exhibitions" method="post">
+        <form action="/admin/update_galleries/galleries" method="post">
           <div>
-            <textarea name="content" class="input-block-level" rows="3">{{exhibitions_text}}</textarea>
+            <textarea name="content" class="input-block-level" rows="3">{{main_galleries_text}}</textarea>
           </div>
-          <div><input type="submit" class="btn btn-large btn-primary" value="Update Exhibitions"></div>
+          <div><input type="submit" class="btn btn-large btn-primary" value="Update Main Galleries"></div>
         </form>
+        
+        <b>Edit Gallery</b>
+
+        <form action="/admin/nav_to_gallery" method="post">
+          <div>
+            <textarea name="content" class="input-block-level" rows="1">new</textarea>
+          </div>
+          <div><input type="submit" class="btn btn-large btn-primary" value="Edit Gallery"></div>
+        </form>
+        
       </div>
       
       <div>
-        <b>Honors</b>
+        <b>Archive Gallery Order</b>
 
-        <form action="/admin/update_honors" method="post">
+        <form action="/admin/update_galleries/archives" method="post">
           <div>
-            <textarea name="content" class="input-block-level" rows="3">{{honors_text}}</textarea>
+            <textarea name="content" class="input-block-level" rows="3">{{archive_galleries_text}}</textarea>
           </div>
-          <div><input type="submit" class="btn btn-large btn-primary" value="Update Honors"></div>
+          <div><input type="submit" class="btn btn-large btn-primary" value="Update Archive Galleries"></div>
         </form>
+        
+        <b>Edit Gallery</b>
+  
+        <form action="/admin/nav_to_gallery" method="post">
+          <div>
+            <textarea name="content" class="input-block-level" rows="1">new</textarea>
+          </div>
+          <div><input type="submit" class="btn btn-large btn-primary" value="Edit Gallery"></div>
+        </form>
+          
       </div>
       
       <div>
-        <b>Schools</b>
+        <b>Orphans</b>
 
-        <form action="/admin/update_schools" method="post">
-          <div>
-            <textarea name="content" class="input-block-level" rows="3">{{schools_text}}</textarea>
-          </div>
-          <div><input type="submit" class="btn btn-large btn-primary" value="Update Schools"></div>
-        </form>
+        <div>
+          <textarea name="content" class="input-block-level" rows="3">{{orphans_galleries_text}}</textarea>
+        </div>
+        
       </div>
-      
-      <font SIZE="+2"><br><b>Galleries Section</b></font>
-      
-      <br>
-      <a href="/admin/edit_galleries">Edit Galleries</a>
       
     </div>
   </body>

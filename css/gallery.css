@@ -7,3 +7,7 @@ body {
 a {
     color: #c0c0c0;
 }
+
+a.smicon {
+    color: #000000;
+}
