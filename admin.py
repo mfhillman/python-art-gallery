@@ -295,6 +295,20 @@ class GalleriesAndEntriesHandler(webapp2.RequestHandler):
     
     self.response.write('Done yo.')
 
+class FixGalleryHandler(webapp2.RequestHandler):
+  def get(self, gallery_id):
+
+    year = datetime.datetime.now().year
+    if gallery_id.isdigit():
+      gallery = Gallery.get_by_id(gallery_id)
+    else:
+      gallery = None
+    if gallery:
+      self.response.write('Got a gallery.')
+      self.response.write('<BR>' + str(gallery) + '<BR>')
+    else:
+      self.response.write('No gallery bub.')
+
 class FixPaintingUrlsHandler(webapp2.RequestHandler):
   def get(self, start_str):
     interval = 25
@@ -367,6 +381,7 @@ app = webapp2.WSGIApplication([
     ('/admin/painting_csv', PaintingCsvHandler),
     ('/admin/gallery_structure', GalleryStructureHandler),
     ('/admin/galleries_and_entries', GalleriesAndEntriesHandler),
+    ('/admin/fix_gallery/([^/]+)', FixGalleryHandler),
     ('/admin/fix_painting_urls/([^/]+)', FixPaintingUrlsHandler),
     ('/admin/fix_specific_painting_url/([^/]+)', FixSpecificPaintingUrlHandler)
 ], debug=True)
