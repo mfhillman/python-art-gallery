@@ -298,7 +298,6 @@ class GalleriesAndEntriesHandler(webapp2.RequestHandler):
 class FixGalleryHandler(webapp2.RequestHandler):
   def get(self, gallery_id):
 
-    year = datetime.datetime.now().year
     if gallery_id.isdigit():
       gallery = Gallery.get_by_id(gallery_id)
     else:
@@ -306,6 +305,13 @@ class FixGalleryHandler(webapp2.RequestHandler):
     if gallery:
       self.response.write('Got a gallery.')
       self.response.write('<BR>' + str(gallery) + '<BR>')
+      paintings = ndb.get_multi(gallery.painting_keys)
+      for i in range(0, len(paintings)):
+        painting = paintings[i]
+        self.response.write('Painting before fixing...' + painting.title + '...' + painting.base_image_url + '<br>')
+        painting.set_base_image_url()
+        self.response.write('Painting after fixing...' + painting.title + '...' + painting.base_image_url + '<br>')
+      ndb.put_multi(paintings)
     else:
       self.response.write('No gallery bub.')
 
