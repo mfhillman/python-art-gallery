@@ -23,6 +23,13 @@ class Painting(ndb.Model):
     except images.ObjectNotFoundError:
       self.base_image_url = ''
 
+  def clear_base_image_url(self) :
+      try:
+        images.delete_serving_url(self._blob_key())
+      except images.ObjectNotFoundError:
+      
+      self.base_image_url = ''
+
   def _image_path(self) :
     return _PAINTING_FORMAT.format(self.key.id())
 

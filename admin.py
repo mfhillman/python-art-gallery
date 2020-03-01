@@ -309,6 +309,7 @@ class FixGalleryHandler(webapp2.RequestHandler):
       for i in range(0, len(paintings)):
         painting = paintings[i]
         self.response.write('Painting before fixing...' + painting.title + '...' + painting.base_image_url + '<br>')
+        painting.clear_base_image_url()
         painting.set_base_image_url()
         self.response.write('Painting after fixing...' + painting.title + '...' + painting.base_image_url + '<br>')
       ndb.put_multi(paintings)
