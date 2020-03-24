@@ -5,7 +5,7 @@ from google.appengine.ext import blobstore
 from google.appengine.ext import ndb
 
 _PAINTING_BUCKET = 'mfh-art-gallery.appspot.com'
-_PAINTING_FORMAT = '/gs/' + _PAINTING_BUCKET + '/artwork-images-fresh/{0}.jpg'
+_PAINTING_FORMAT = '/gs/' + _PAINTING_BUCKET + '/artwork-images-3/{0}.jpg'
 
 _RESUME_KEY_LOCATION = 'resume'
 
